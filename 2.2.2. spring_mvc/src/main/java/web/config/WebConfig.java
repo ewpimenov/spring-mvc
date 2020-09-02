@@ -60,11 +60,11 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     //новые бины добавил
-
     @Bean(name = "localeResolver")
     public LocaleResolver getLocaleResolver()  {
         CookieLocaleResolver resolver= new CookieLocaleResolver();
         resolver.setCookieDomain("myAppLocaleCookie");
+        resolver.setDefaultLocale(Locale.ENGLISH);
         resolver.setCookieMaxAge(60*60);
         return resolver;
     }
@@ -73,7 +73,8 @@ public class WebConfig implements WebMvcConfigurer {
     public MessageSource getMessageResource()  {
         ReloadableResourceBundleMessageSource messageResource= new ReloadableResourceBundleMessageSource();
 
-        messageResource.setBasename("messages");
+        messageResource.setBasename("classpath:messages");
+        messageResource.setCacheSeconds(1);
         messageResource.setDefaultEncoding("UTF-8");
         return messageResource;
     }
@@ -81,7 +82,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
-        localeInterceptor.setParamName("lang");
+        localeInterceptor.setParamName("locale");
 
         registry.addInterceptor(localeInterceptor).addPathPatterns("/*");
     }
